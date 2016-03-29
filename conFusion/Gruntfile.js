@@ -71,6 +71,7 @@ module.exports = function (grunt) {
         },
 
         // Concat
+        //combines multiple files into a single file
         concat: {
             options: {
                 separator: ';'
@@ -80,16 +81,19 @@ module.exports = function (grunt) {
         },
 
         // Uglify
+        //minifies js files and does mangling(ie replaces variables with single letter)
         uglify: {
             // dist configuration is provided by useminPrepare
             dist: {}
         },
 
+        //minifies css files (i.e removes whitespaces and comments)
         cssmin: {
             dist: {}
         },
 
         // Filerev
+        //Applies version number to the files.
         filerev: {
             options: {
                 encoding: 'utf8',
@@ -112,6 +116,7 @@ module.exports = function (grunt) {
         // Replaces all assets with their revved version in html and css files.
         // options.assetDirs contains the directories for finding the assets
         // according to their relative paths
+        //Replaces links of normal css and js files with their minified version.
         usemin: {
             html: ['dist/*.html'],
             css: ['dist/styles/*.css'],
@@ -133,13 +138,18 @@ module.exports = function (grunt) {
                 files: ['app/styles/mystyles.css'],
                 tasks:['build']
             },
+            gruntfile:{
+                files: ['Gruntfile.js'],
+                tasks:['build']
+            },
             livereload: {
                 options: {
                     livereload: '<%= connect.options.livereload %>'
                 },
                 files: [
                     'app/{,*/}*.html',
-                    '.tmp/styles/{,*/}*.css',
+                    'app/scripts/**/*.js',
+                    'app/styles/**/*.css',
                     'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
             }
