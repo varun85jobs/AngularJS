@@ -12,6 +12,7 @@ var gulp = require('gulp'),
     changed = require('gulp-changed'),
     rev = require('gulp-rev'),
     browserSync = require('browser-sync'),
+    sourcemaps = require('gulp-sourcemaps'),
     del = require('del');
 
 gulp.task('jshint', function () {
@@ -33,8 +34,8 @@ gulp.task('default', ['clean'], function () {
 gulp.task('usemin', ['jshint'], function () {
     gulp.src('app/menu.html')
         .pipe(usemin({
-            css: [minifycss(), rev()],
-            js: [uglify(), rev()]
+            css: [sourcemaps.init(), minifycss(), rev(), sourcemaps.write('.')],
+            js: [sourcemaps.init(), uglify(), rev(), sourcemaps.write('.')]
         }))
         .pipe(gulp.dest('dist/'));
 });
