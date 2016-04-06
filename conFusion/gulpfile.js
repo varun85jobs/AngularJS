@@ -4,8 +4,9 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
     usemin = require('gulp-usemin'),
+    useref = require('gulp-useref'),
+    gulpif = require('gulp-if'),
     imagemin = require('gulp-imagemin'),
-    rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
@@ -14,6 +15,8 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     sourcemaps = require('gulp-sourcemaps'),
     ngannotate = require('gulp-ng-annotate'),
+    lazypipe = require('lazypipe'),
+    revReplace = require('gulp-rev-replace'),
     del = require('del');
 
 gulp.task('jshint', function () {
@@ -29,15 +32,28 @@ gulp.task('clean', function () {
 
 // Default task
 gulp.task('default', ['clean'], function () {
-    gulp.start('usemin', 'imagemin', 'copyfonts');
+    gulp.start('useref', 'imagemin', 'copyfonts');
 });
 
-gulp.task('usemin', ['jshint'], function () {
-    gulp.src('app/menu.html')
-        .pipe(usemin({
-            css: [sourcemaps.init(), minifycss(), rev(), sourcemaps.write('.')],
-            js: [sourcemaps.init(), ngannotate(), uglify(), rev(), sourcemaps.write('.')]
-        }))
+var jsDistTask = lazypipe()
+                .pipe(ngannotate)
+                .pipe(uglify)
+                .pipe(rev)
+                ;
+
+var cssDistTask = lazypipe()
+                .pipe(minifycss)
+                .pipe(rev)
+                ;
+
+gulp.task('useref', ['jshint'], function () {
+    gulp.src('app/*.html')
+        .pipe(useref())
+        //.pipe(sourcemaps.init())
+        .pipe(gulpif('*.js', jsDistTask()))
+        .pipe(gulpif('*.css', cssDistTask()))
+        .pipe(revReplace())
+       // .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/'));
 });
 
@@ -58,7 +74,7 @@ gulp.task('copyfonts', function () {
 // Watch
 gulp.task('watch', ['browser-sync'], function () {
     // Watch .js files
-    gulp.watch('{app/scripts/**/*.js,app/styles/**/*.css,app/**/*.html}', ['usemin']);
+    gulp.watch('{app/scripts/**/*.js,app/styles/**/*.css,app/**/*.html}', ['useref']);
     // Watch image files
     gulp.watch('app/images/**/*', ['imagemin']);
 
