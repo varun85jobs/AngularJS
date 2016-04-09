@@ -78,7 +78,7 @@ angular.module('confusionApp')
     .controller('DishCommentController', ['$scope', function ($scope) {
 
         //Step 1: Create a JavaScript object to hold the comment from the form
-        $scope.newComment = {"author":"", "rating": 5, "comment":""};
+        $scope.newComment = { author : "", rating: '5', comment: "" , date : new Date().toISOString()};
 
         $scope.commentPreview = false;
 
@@ -95,7 +95,7 @@ angular.module('confusionApp')
             $scope.commentForm.$setPristine();
 
             //Step 5: reset your JavaScript object that holds your comment
-            $scope.newComment = {"rating": 5};
+            $scope.newComment = { author : "", rating: '5', comment: ""} ;
         };
 
 
