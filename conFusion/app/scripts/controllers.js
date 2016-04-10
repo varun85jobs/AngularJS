@@ -101,4 +101,20 @@ angular.module('confusionApp')
 
     }])
 
+
+    .controller('IndexController',['$scope', 'menuFactory', 'corporateFactory', function ($scope, menuFactory, corporateFactory){
+
+        $scope.promotion = menuFactory.getPromotion(0);
+
+        $scope.leader = corporateFactory.getLeader(3);
+
+        $scope.featuredDish = menuFactory.getDish(0);
+    }])
+
+
+    .controller('AboutController',['$scope', 'corporateFactory', function ($scope, corporateFactory){
+
+        $scope.leaders = corporateFactory.getLeaders();
+
+    }])
 ;

@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:400,300,700);
+
 .row-header {
   margin: 0px auto;
   padding: 0px 0px;
@@ -79,6 +81,7 @@ body {
   align: center;
   padding: 50px 0px 0px 0px;
   z-index: 0;
+  font-family: 'Oswald', sans-serif;
 }
 .tab-content {
   border-bottom: 1px solid #dddddd;
