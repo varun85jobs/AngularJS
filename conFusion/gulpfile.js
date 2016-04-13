@@ -47,13 +47,13 @@ var cssDistTask = lazypipe()
                 ;
 
 gulp.task('useref', ['jshint'], function () {
-    gulp.src('app/*.html')
-        .pipe(useref())
-        //.pipe(sourcemaps.init())
-        .pipe(gulpif('*.js', jsDistTask()))
-        .pipe(gulpif('*.css', cssDistTask()))
-        .pipe(revReplace())
-       // .pipe(sourcemaps.write('.'))
+    gulp.src('app/**/*.html')
+         .pipe(useref())
+         //.pipe(sourcemaps.init())
+         .pipe(gulpif('*.js', jsDistTask()))
+         .pipe(gulpif('*.css', cssDistTask()))
+         .pipe(revReplace())
+         //.pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('dist/'));
 });
 
