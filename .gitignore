@@ -5,6 +5,8 @@ dist
 *.gitignore
 *.gitattributes
 *.editorconfig
+bower_components
+node_modules
 
 # Windows image file caches
 Thumbs.db
