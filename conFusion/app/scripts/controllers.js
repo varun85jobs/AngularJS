@@ -82,7 +82,7 @@ angular.module('confusionApp')
         $scope.showDish = false;
         $scope.message = "Loading Dish...";
 
-        $scope.dish = menuFactory.getDishes().get({id: parseInt($stateParams.id, baseSystem)},
+        $scope.dish = menuFactory.getDishes().get({id: parseInt(id, baseSystem)},
             function (response) {
                 $scope.dish = response;
                 $scope.showDish = true;
