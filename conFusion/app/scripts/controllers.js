@@ -55,23 +55,20 @@ angular.module('confusionApp')
 
     }])
 
-    .controller('FeedbackController', ['$scope', function ($scope) {
+    .controller('FeedbackController', ['$scope', 'feedbackFactory', function ($scope, feedbackFactory) {
 
         $scope.sendFeedback = function () {
 
             console.log($scope.feedback);
 
-            if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
-                $scope.invalidChannelSelection = true;
-                console.log('incorrect');
-            }
-            else {
-                $scope.invalidChannelSelection = false;
-                $scope.feedback = {mychannel: "", firstName: "", lastName: "", agree: false, email: ""};
-                $scope.feedback.mychannel = "";
-                $scope.feedbackForm.$setPristine();
-                console.log($scope.feedback);
-            }
+            feedbackFactory.send().save($scope.feedback);
+
+            $scope.invalidChannelSelection = false;
+            $scope.feedback = {mychannel: "", firstName: "", lastName: "", agree: false, email: ""};
+            $scope.feedback.mychannel = "";
+            $scope.feedbackForm.$setPristine();
+            console.log($scope.feedback);
+
         };
     }])
 
@@ -109,7 +106,7 @@ angular.module('confusionApp')
             // Step 3: Push your comment into the dish's comment array
             $scope.dish.comments.push($scope.newComment);
 
-            menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
+            menuFactory.getDishes().update({id: $scope.dish.id}, $scope.dish);
 
             //Step 4: reset your form to pristine
             $scope.commentForm.$setPristine();
@@ -124,11 +121,39 @@ angular.module('confusionApp')
 
     .controller('IndexController', ['$scope', 'menuFactory', 'corporateFactory', function ($scope, menuFactory, corporateFactory) {
 
-        $scope.promotion = menuFactory.getPromotion(0);
+        //Fetching Promotion
+        $scope.showPromotion = false;
+        $scope.showPromotionMessage = "Loading Promotion...";
 
-        $scope.leader = corporateFactory.getLeader(3);
+        $scope.promotion = menuFactory.getPromotion().get({id: 0})
+            .$promise.then(
+            function (response) {
+                $scope.promotion = response;
+                $scope.showPromotion = true;
+            },
+            function (response) {
+                $scope.showPromotionMessage = "Error: " + response.status + " " + response.statusText;
+            });
 
-        $scope.showDish = true;
+
+        //Fetching leader
+        $scope.showLeader = false;
+        $scope.showLeaderMessage = "Loading Leadership information...";
+
+        $scope.leader = corporateFactory.getLeaders().get({id: 0})
+            .$promise.then(
+            function (response) {
+                $scope.leader = response;
+                $scope.showLeader = true;
+            },
+            function (response) {
+                $scope.showLeaderMessage = "Error: " + response.status + " " + response.statusText;
+            }
+        );
+
+
+        //Fetching featured Dish
+        $scope.showDish = false;
         $scope.message = "Loading Dish...";
 
         $scope.featuredDish = menuFactory.getDishes().get({id: 0})
@@ -146,7 +171,19 @@ angular.module('confusionApp')
 
     .controller('AboutController', ['$scope', 'corporateFactory', function ($scope, corporateFactory) {
 
-        $scope.leaders = corporateFactory.getLeaders();
+        $scope.showLeaders = false;
+        $scope.showLeadersMessage = "Loading Leadership information...";
+
+        $scope.leaders = corporateFactory.getLeaders().query()
+            .$promise.then(
+            function (response) {
+                $scope.leaders = response;
+                $scope.showLeaders = true;
+            },
+            function (response) {
+                $scope.showLeadersMessage = "Error: " + response.status + " " + response.statusText;
+            }
+        );
 
     }])
 ;
