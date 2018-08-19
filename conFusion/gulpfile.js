@@ -17,6 +17,7 @@ var gulp = require('gulp'),
     ngannotate = require('gulp-ng-annotate'),
     lazypipe = require('lazypipe'),
     revReplace = require('gulp-rev-replace'),
+    deploy = require('gulp-gh-pages'),
     del = require('del');
 
 gulp.task('jshint', function () {
@@ -79,6 +80,15 @@ gulp.task('watch', ['browser-sync'], function () {
     gulp.watch('app/images/**/*', ['imagemin']);
 
 });
+
+/**
+ * Push build to gh-pages
+ */
+gulp.task('deploy', function () {
+    return gulp.src("./dist/**/*")
+        .pipe(deploy())
+});
+
 
 gulp.task('browser-sync', ['default'], function () {
     var files = [
